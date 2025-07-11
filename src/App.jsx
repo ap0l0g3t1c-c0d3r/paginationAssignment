@@ -15,20 +15,30 @@ function App() {
   const [input, setInput] = useState("")
   const [currentPage, setCurrentPage] = useState(1) 
 
-  console.log("we are currently on",currentPage)
-
   useEffect(()=> {
-    fetch("https://jsonplaceholder.typicode.com/comments")
-    .then((val)=> val.json())
-    .then((res)=> setComments(res))
-    .catch((e)=> console.log(e))
-    
-    fetch('https://jsonplaceholder.typicode.com/posts')
-    .then((response) => response.json())
-    .then((json) => setPosts(json));
-  
+    const commentsCheck = JSON.parse(localStorage.getItem("posts"))
+    console.log("commentsCheck",commentsCheck)
+    if(commentsCheck.length < 1){
+      fetch("https://jsonplaceholder.typicode.com/comments")
+      .then((val)=> val.json())
+      .then((res)=> setComments(res))
+      .catch((e)=> console.log(e))
+    }
+    localStorage.setItem("comments", JSON.stringify(comments))
   },[])
+  
+  useEffect(()=> {
+    const postsCheck = JSON.parse(localStorage.getItem("comments"))
+    console.log("postChecks",postsCheck)
+     if(postsCheck.length < 1){
+      fetch('https://jsonplaceholder.typicode.com/posts')
+      .then((response) => response.json())
+      .then((json) => setPosts(json));
+    }
+    localStorage.setItem("posts", JSON.stringify(posts))
+  }, [])
 
+  
   function handleChange(e){
     setInput(e.target.value)
   }
@@ -47,7 +57,7 @@ function App() {
   }
   
   function paginationPages(e, pageNumber){
-    console.log("this is pagination page", pageNumber)
+    // console.log("this is pagination page", pageNumber)
     setCurrentPage(pageNumber)
   }
 
