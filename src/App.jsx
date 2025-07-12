@@ -14,8 +14,6 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1)
   const [filteredComments, setFilteredComments] = useState([]) 
 
-  console.log("comments from local storage",JSON.parse(localStorage.getItem("comments")))
-
   useEffect(()=> {
     const commentsCheck = JSON.parse(localStorage.getItem("comments")) || []
     if(commentsCheck.length < 1){
@@ -27,9 +25,7 @@ function App() {
     }else{
       setComments(commentsCheck)
     }
-  },[])
-  
-  useEffect(()=> {
+
     const postsCheck = JSON.parse(localStorage.getItem("posts")) || []
      if(postsCheck.length < 1){
       fetch('https://jsonplaceholder.typicode.com/posts')
@@ -39,7 +35,7 @@ function App() {
     }else{
       setPosts(postsCheck)
     }
-  }, [])
+  },[])
 
   useEffect(() => {
   if (posts.length > 0) {
@@ -53,10 +49,6 @@ function App() {
     }
   },[comments])
   
-  function handleChange(e){
-    setInput(e.target.value)
-  }
-
   function findOnClick(){
     if(input === "") filteredComments = comments
     let filteredComments = comments.filter((comment) => {
@@ -68,28 +60,17 @@ function App() {
   }
   
   function paginationPages(e, pageNumber){
-    // console.log("this is pagination page", pageNumber)
     setCurrentPage(pageNumber)
-  }
-
-  function handleNextPage(){
-        setCurrentPage(c => c + 1)
-    }
-
-  function handlePreviousPage(){
-        setCurrentPage(c => c - 1)
   }
 
   function inputforName(e, id){
     const updatedName = comments.map((comment)=> {
       return comment.id === id ? {...comment, name: e.target.value} : comment 
     })
-    console.log("updateName")
     setComments(updatedName)
   }
 
   function inputforBody(e, id){
-    console.log("body change", e.target.value)
     const updatedBody = comments.map((comment)=> {
       return comment.id === id ? {...comment,body: e.target.value } : comment
     })
@@ -99,7 +80,7 @@ function App() {
   const dataToPaginate = filteredComments.length > 0 ? filteredComments : comments;
   const commentsPag = dataToPaginate.slice((currentPage - 1)*numberOfItemsinPage,(currentPage*numberOfItemsinPage))
   const commentsArray = commentsPag.map((comment, index)=> {   
-  const postTitle = posts.find((post)=> post.id === comment.id) 
+  const postTitle = posts.find((post)=> post.id === comment.postId) 
   return <TableCell key={comment.id} email={comment.email} name={comment.name} body={comment.body} 
                 title={postTitle?.title || "Title not found"} id={comment.id}
                 nameHandler={inputforName} bodyHandler={inputforBody}/>
@@ -109,12 +90,16 @@ function App() {
     <>
       <div className='w-screen flex flex-row justify-center items-center font-sans px-4 py-6'>
         <div className='flex flex-col gap-4 items-center'>
-          <InputSearch onchange={handleChange} onclick={findOnClick}/>
-          <table className='table-fixed w-3/5 h-1/5 border-separate border-spacing-2 border-2 border-black-400'>
-            <Table/>
-            <tbody>{commentsArray}</tbody>
-          </table>
-          <Pagination prevPageHandler={handlePreviousPage} nextPageHandler={handleNextPage} commentLength={filteredComments.length > 0 ? filteredComments.length: comments.length} onclick={paginationPages} currentPage={currentPage} numberOfItemsPage={numberOfItemsinPage}/>
+          <InputSearch onchange={(e)=> setInput(e.target.value)} onclick={findOnClick}/>
+          <div className='overflow-x-auto flex justify-center'>
+             <table className='table-fixed w-3/5 h-1/5 max-lg:w-full border-separate border-spacing-2 border-2 border-black-400'>
+              <Table/>
+              <tbody>{commentsArray}</tbody>
+            </table>
+          </div>
+          <Pagination prevPageHandler={()=>setCurrentPage(c => c - 1)} nextPageHandler={()=> setCurrentPage(c => c + 1)} 
+          commentLength={dataToPaginate.length} onclick={paginationPages} 
+          currentPage={currentPage} numberOfItemsPage={numberOfItemsinPage}/>
         </div>
       </div>
     </>

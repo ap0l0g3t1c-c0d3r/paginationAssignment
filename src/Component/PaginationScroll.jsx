@@ -33,7 +33,7 @@ export function Pagination({commentLength, prevPageHandler, nextPageHandler, num
 function Pages({pageNumber, onclick, currentPage}){
     return(
         <li>
-            <a href="#" onClick={(e)=> onclick(e,pageNumber)} className={`flex items-center ${currentPage === pageNumber ? "bg-slate-500" : "bg-white"} ${currentPage - 5 > pageNumber && "hidden"} ${currentPage + 5 < pageNumber && "hidden"} justify-center px-4 h-10 ms-0 leading-tight text-gray-500 ${currentPage === pageNumber ? "bg-slate-700" : "bg-white"} border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700`}>{pageNumber}</a>
+            <a href="#" onClick={(e)=> onclick(e,pageNumber)} className={`flex items-center ${currentPage === pageNumber ? "bg-slate-00" : "bg-white"} ${currentPage - 5 > pageNumber && "hidden"} ${currentPage + 5 < pageNumber && "hidden"} justify-center px-4 h-10 ms-0 leading-tight text-gray-500 ${currentPage === pageNumber ? "bg-slate-700" : "bg-white"} border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700`}>{pageNumber}</a>
         </li>
     )
 }
