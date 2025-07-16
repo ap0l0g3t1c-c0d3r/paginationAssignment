@@ -50,7 +50,7 @@ function App() {
   },[comments])
   
   function findOnClick(){
-    if(input === "") filteredComments = comments
+    if(input === "") setFilteredComments(comments)
     let filteredComments = comments.filter((comment) => {
        if(comment.name.toLowerCase().includes(input.toLowerCase())){
         return comment
